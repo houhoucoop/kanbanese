@@ -19,7 +19,6 @@
 <script>
 import HelloWorld from './components/HelloWorld'
 import Column from './components/Column'
-
 export default {
   name: 'App',
   components: {
@@ -36,6 +35,9 @@ export default {
 </script>
 <style lang="scss">
 //---------- basic setting ----------//
+[v-cloak] {
+  display: none;
+}
 html,
 body {
   margin: 0;
