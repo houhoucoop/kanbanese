@@ -1,14 +1,16 @@
 <template>
   <div :id="idName" class="column">
+    <!-- list title -->
     <div class="column__head justify-betweeen-center">
       <slot name="columnTitle"></slot>
       <button @click="sortItem(idName)">
         <i class="fas fa-sort-amount-down"></i>
       </button>
     </div>
+    <!-- list items -->
     <div class="column__itembox">
-      <transition-group name="slide-fade" mode="out-in">
-        <div class="column__itembox__item" v-for="item in itemList" :key="item.id">
+      <transition-group name="slide-fade" mode="out-in" :id="idName + '-box'">
+        <div :id="'item-' + item.id" :class="item.class" v-for="item in itemList" :key="item.id" @dragend="dragEnd" @dragstart="dragStart(item, $event)"  @dragenter="dragEnter(item)" draggable="true" :style="'order:' + item.order + ';'">
           <div class="column__itembox__item__body justify-betweeen-center">
             <p>{{item.text}}</p>
             <button @click="deleteItem(item)">
@@ -21,6 +23,7 @@
         </div>
       </transition-group>
     </div>
+    <!-- add item button -->
     <div class="column__additem">
       <div class="column__additem__title" v-if="showTextarea" @click="showTextarea=!showTextarea">
         <p>Add Item <i class="fas fa-plus-circle"></i></p>
@@ -31,6 +34,7 @@
         <button class="column__additem__input--cancel" @click="showTextarea=!showTextarea">Cancel</button>
       </div>
     </div>
+    {{itemList}}
   </div>
 </template>
 <script>
@@ -41,7 +45,8 @@ export default {
     return {
       allList: this.$store.getters.allList,
       holder: '',
-      showTextarea: true
+      showTextarea: true,
+      draggingItem: undefined
     }
   },
   computed: {
@@ -50,13 +55,15 @@ export default {
     }
   },
   methods: {
-    addItem: function () {
+    addItem () {
       var value = this.holder && this.holder.trim()
       if (!value) {
         return
       }
       let itemObj = {
         id: this.allList.length + 1,
+        order: this.allList.length + 1,
+        class: 'column__itembox__item',
         text: this.holder,
         cate: this.idName,
         time: new Date()
@@ -64,17 +71,67 @@ export default {
       this.$store.dispatch('addItem', itemObj)
       this.holder = ''
     },
-    deleteItem: function (item) {
+    deleteItem (item) {
       this.$store.dispatch('deleteItem', item)
     },
-    sortItem: function (item) {
+    sortItem (item) {
       this.$store.dispatch('sortItem', item)
+    },
+    dragStart (item, event) {
+      this.draggingItem = item
+      event.target.style.opacity = 0.5
+    },
+    dragEnter (item) {
+      const tempIndex = item.order
+      item.order = this.draggingItem.order
+      this.draggingItem.order = tempIndex
+      this.$store.dispatch('dragItem', tempIndex)
+    },
+    dragEnd (event) {
+      event.target.style.opacity = 1
+    },
+    addVirtualItem () {
+      // var virtualBox = document.getElementById(this.idName + '-box')
+      // var allItem = virtualBox.getElementsByClassName('column__itembox__item')
+      // for (let i = 0; i < this.itemList.length; i++) {
+      //   var virtualItem = '<div class="virtual-item" @dragover="dragOver" style="order:'+ (2 * i + 1) + ';"</div>'
+      //   virtualBox.childNodes[i].insertAdjacentHTML('beforebegin', virtualItem)
+      // }
+      // for (let i = 0; i < allItem.length; i++) {
+      //   allItem[i].style.order = 2 * i
+      // }
+      // let virtualItem = {
+      //   class: 'virtual-item'
+      // }
+      // console.log(this.itemList)
+      // this.itemList.unshift(virtualItem)
+      // this.$store.dispatch('sortItem', item)
+      // for (let i =0; i<this.itemList.length; i++) {
+      //   this.itemList[i].push
+      // }
+      // console.log(this.itemList.length)
+      // for (let i = 0; i <= this.itemList.length; i += 2) {
+      //   let virtualItem = {
+      //     id: Math.random().toString(36).substring(7),
+      //     class: 'virtual-item',
+      //     text: '',
+      //     cate: '',
+      //     time: new Date()
+      //   }
+      //   if (i % 2 === 0) {
+      //     this.itemList.splice(i, 0, virtualItem)
+      //   }
+      // }
     }
   },
   watch: {
-    itemList: function () {
+    itemList () {
       this.itemList = this.$store.getters.getList(this.idName)
+      // this.addVirtualItem()
     }
+  },
+  created: function () {
+    // this.addVirtualItem()
   }
 }
 
@@ -114,19 +171,31 @@ $purple: #858FD9;
     }
   }
   &__itembox {
+    span {
+      display: flex;
+      flex-direction: column;
+    }
     &__item {
       background: #fff;
       padding: .5em;
-      margin-bottom: 1em;
+      margin: .5em 0;
       box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .1);
-      &__head {}
-      &__body {}
+      &__body {
+      }
       &__footer {
         padding-top: .5rem;
         p {
           font-size: 12px;
           color: #777777;
         }
+      }
+    }
+    .virtual-item {
+      height: 20px;
+      border: 2px dashed #d1d1d1;
+      .column__itembox__item__body,
+      .column__itembox__item__footer {
+        display: none;
       }
     }
   }

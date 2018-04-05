@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-// local storage stuff
+// broswer local storage
 let loadState = function () {
   let serializedState = localStorage.getItem('vue_state')
   if (serializedState === null) {
@@ -30,6 +30,9 @@ const store = new Vuex.Store({
     },
     sortItem ({commit}, thisItem) {
       commit('sortItem', thisItem)
+    },
+    dragItem ({commit}) {
+      commit('dragItem')
     }
   },
   mutations: {
@@ -43,11 +46,14 @@ const store = new Vuex.Store({
       saveState(state.itemList)
     },
     sortItem (state, thisItem) {
-      state.itemList.sort(function (a, b) {
-        if ((a.cate && b.cate) === thisItem) {
-          return (a.id - b.id)
+      for (let i = 0; i < state.itemList.length; i++) {
+        if (state.itemList[i].cate === thisItem) {
+          state.itemList[i].order = state.itemList[i].id
         }
-      })
+      }
+      saveState(state.itemList)
+    },
+    dragItem (state) {
       saveState(state.itemList)
     }
   },
