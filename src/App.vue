@@ -1,8 +1,9 @@
 <template>
   <div id="app">
-    <h1>KANBANese</h1>
-    {{allItemList}}
-    <!-- <img src="./assets/logo.png"> -->
+    <header class="justify-betweeen-center">
+      <h1>KANBANese</h1>
+      <button @click="clearStorage">Clear Storage</button>
+    </header>
     <div class="container">
       <Column id-name="backlog">
         <h2 slot="columnTitle">Backlog</h2>
@@ -17,23 +18,27 @@
   </div>
 </template>
 <script>
-import HelloWorld from './components/HelloWorld'
 import Column from './components/Column'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     Column
   },
-  data () {
-    return {
-      allItemList: this.$store.getters.allList
+  methods: {
+    clearStorage () {
+      localStorage.clear()
+      location.reload()
     }
   }
 }
 
 </script>
 <style lang="scss">
+
+$main-black: #3a3a3a;
+$purple: #858FD9;
+$main-grey: #9e9e9e;
+$border-color: #e5e5e5;
 //---------- basic setting ----------//
 [v-cloak] {
   display: none;
@@ -42,8 +47,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Raleway', Helvetica, Arial, 'PingFang TC', 'Heiti TC', '微軟正黑體', 'Microsoft JhengHei', 'Microsoft YaHei', sans-serif;
   background: #EEF2F9;
+  color: $main-black
 }
 
 h1,
@@ -84,14 +90,40 @@ button:focus {
   width: 90%;
   max-width: 1200px;
   margin: 3em auto;
-  h1 {
+  header {
     margin-bottom: 1.5rem;
+    button {
+      width: 120px;
+      height: 30px;
+      text-align: center;
+      border-radius: 15px;
+      border: 1px solid $border-color;
+      background: transparent;
+      color: $main-grey;
+      transition: .3s ease;
+      &:hover {
+        background: $purple;
+        border-color: $purple;
+        color: #fff;
+      }
+    }
   }
   .container {
     display: flex;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
   }
 }
-
+@media (max-width: 767.98px) {
+  .container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
 </style>

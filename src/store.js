@@ -16,36 +16,41 @@ let saveState = function (state) {
   let serializedState = JSON.stringify(state)
   localStorage.setItem('vue_state', serializedState)
 }
-
 const store = new Vuex.Store({
   state: {
-    itemList: loadState() || []
+    itemList: loadState() || [],
+    allItenList: loadState() || []
   },
   actions: {
     addItem ({commit}, thisItem) {
-      commit('addItem', thisItem)
+      commit('ADD_ITEM', thisItem)
     },
     deleteItem ({commit}, thisItem) {
-      commit('deleteItem', thisItem)
+      commit('DELETE_ITEM', thisItem)
     },
     sortItem ({commit}, thisItem) {
-      commit('sortItem', thisItem)
+      commit('SORT_ITEM', thisItem)
     },
-    dragItem ({commit}) {
-      commit('dragItem')
+    dragItem ({commit}, newList) {
+      commit('DRAG_ITEM', newList)
+    },
+    orderItem ({commit}) {
+      commit('ORDER_ITEM')
     }
   },
   mutations: {
-    addItem (state, thisItem) {
+    ADD_ITEM (state, thisItem) {
       state.itemList.push(thisItem)
+      state.allItenList.push(thisItem)
       saveState(state.itemList)
+      saveState(state.allItenList)
     },
-    deleteItem (state, thisItem) {
+    DELETE_ITEM (state, thisItem) {
       let index = state.itemList.indexOf(thisItem)
       state.itemList.splice(index, 1)
       saveState(state.itemList)
     },
-    sortItem (state, thisItem) {
+    SORT_ITEM (state, thisItem) {
       for (let i = 0; i < state.itemList.length; i++) {
         if (state.itemList[i].cate === thisItem) {
           state.itemList[i].order = state.itemList[i].id
@@ -53,17 +58,26 @@ const store = new Vuex.Store({
       }
       saveState(state.itemList)
     },
-    dragItem (state) {
+    DRAG_ITEM (state, newList) {
+      state.itemList = newList
+      saveState(state.itemList)
+    },
+    ORDER_ITEM (state) {
       saveState(state.itemList)
     }
   },
   getters: {
     getList (state) {
-      return keyword => state.itemList.filter(item => {
-        return item.cate === keyword
-      })
+      return function (keyword) {
+        return state.itemList.filter(function (item) {
+          return item.cate === keyword;
+        });
+      };
     },
     allList (state) {
+      return state.allItenList
+    },
+    tempList (state) {
       return state.itemList
     }
   }
