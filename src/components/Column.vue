@@ -256,6 +256,7 @@ $border-color: #e5e5e5;
           }
           button {
             color: $main-grey;
+            background: transparent;
           }
         }
         &__body {
