@@ -28,13 +28,24 @@
             @drop="sameColumn(item, $event)"
             draggable="true">
             <div class="column__itembox__wrap__item__head justify-betweeen-center">
-              <p class="id-tag">ID {{item.id}}</p>
-              <button @click="deleteItem(item)">
-                <i class="fas fa-times"></i>
-              </button>
+              <div class="column__itembox__wrap__item__head__left">
+                <p class="id-tag">ID {{item.id}}</p>
+              </div>
+              <div class="column__itembox__wrap__item__head__right">
+                <button @click="item.edit =! item.edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button @click="deleteItem(item)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </div>
             <div class="column__itembox__wrap__item__body">
-              <p>{{item.text}}</p>
+              <p v-if="item.edit == false">{{item.text}}</p>
+              <div class="column__itembox__wrap__item__body--edit" v-else>
+                <textarea cols="5" rows="5" v-model="item.text" autofocus></textarea>
+                <button @click="emitItem(item)">Update</button>
+              </div>
             </div>
             <div class="column__itembox__wrap__item__footer">
               <p>Date: {{item.time}}</p>
@@ -83,6 +94,7 @@ export default {
     return {
       holder: '',
       showTextarea: true,
+      hideEdit: true,
       draggingItem: {}
     }
   },
@@ -111,11 +123,16 @@ export default {
         class: 'column__itembox__wrap__item',
         text: this.holder,
         cate: this.idName,
-        time: new Date().toLocaleString()
+        time: new Date().toLocaleString(),
+        edit: false
       }
       this.$store.dispatch('addItem', itemObj)
       this.holder = ''
     },
+    emitItem (item) {
+      item.edit = false
+      this.$store.dispatch('emitItem', item)
+    }, 
     deleteItem (item) {
       this.$store.dispatch('deleteItem', item)
     },
@@ -144,12 +161,14 @@ export default {
     otherColumn (idName, event) {
       event.preventDefault()
       let data = event.dataTransfer.getData('drapDiv')
-      if (event.target.className !== 'column__itembox__wrap over') {
+      let thisIdbox = idName + '-box'
+      if (event.target.className !== 'column__itembox__wrap over'){
         return false
       } else {
         event.target.classList.remove('over')
         event.target.appendChild(document.getElementById(data))
         let preId = data.replace('item-', '')
+        // find dradding item from array by id
         let newItem = this.tempList.find(function (obj) {
           return obj.id == preId
         })
@@ -162,25 +181,26 @@ export default {
       if (item.cate !== this.draggingItem.cate) {
         return false
       } else {
+        // item means target item
         const tempIndex = item.order
-        item.order = this.draggingItem.order
+        item.order = this.draggingItem.order //target item will change its order to dragging item
         this.draggingItem.order = tempIndex
         this.$store.dispatch('orderItem')
       }
     }
   },
-  // update when list data changed
-  watch: {
-    itemList () {
-      this.itemList = this.$store.getters.getList(this.idName)
-    },
-    tempList () {
-      return this.$store.getters.tempList
-    },
-    allList () {
-      return this.$store.getters.allList
-    }
-  }
+  // update when list data changed (no need)
+  // watch: {
+    // itemList () {
+    //   this.itemList = this.$store.getters.getList(this.idName)
+    // },
+    // tempList () {
+    //   return this.$store.getters.tempList
+    // },
+    // allList () {
+    //   return this.$store.getters.allList
+    // }
+  // }
 }
 
 </script>
@@ -195,6 +215,11 @@ $border-color: #e5e5e5;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
 }
 
 //---------- transition ---------//
@@ -243,6 +268,7 @@ $border-color: #e5e5e5;
         margin: .5em 0;
         box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .1);
         cursor: move;
+        transition: all 0.6s ease;
         &__head {
           .id-tag {
             font-size: 11px;
@@ -256,10 +282,28 @@ $border-color: #e5e5e5;
           }
           button {
             color: $main-grey;
+            transition: all 0.6s ease;
+            &:hover {
+              color: $purple;
+            }
           }
         }
         &__body {
           padding: .5em 0;
+          &--edit {
+            textarea {
+              width: calc(100% - .5em);
+              box-sizing: border-box;
+              border: 1px solid $border-color;
+            }
+            button {
+              width: calc(100% - .5em);
+              padding: .5em 0;
+              background: $purple;
+              color: #fff;
+              border-radius: 5px;
+            }
+          }
         }
         &__footer {
           padding-top: .5rem;

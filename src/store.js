@@ -25,6 +25,9 @@ const store = new Vuex.Store({
     addItem ({commit}, thisItem) {
       commit('ADD_ITEM', thisItem)
     },
+    emitItem ({commit}, thisItem) {
+      commit('EMIT_ITEM', thisItem)
+    },
     deleteItem ({commit}, thisItem) {
       commit('DELETE_ITEM', thisItem)
     },
@@ -44,6 +47,9 @@ const store = new Vuex.Store({
       state.allItenList.push(thisItem)
       saveState(state.itemList)
       saveState(state.allItenList)
+    },
+    EMIT_ITEM (state, thisItem) {
+      saveState(state.itemList)
     },
     DELETE_ITEM (state, thisItem) {
       let index = state.itemList.indexOf(thisItem)
