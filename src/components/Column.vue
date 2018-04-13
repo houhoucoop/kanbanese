@@ -29,14 +29,11 @@
             draggable="true">
             <div class="column__itembox__wrap__item__head justify-betweeen-center">
               <div class="column__itembox__wrap__item__head__left">
-<<<<<<< HEAD
                 <p class="id-tag">ID {{item.id}}</p>
-=======
                 <p class="id-tag" 
                   :style="'background:' + item.tagColor + ';'">
                   ID {{item.id}}
                 </p>
->>>>>>> develop
               </div>
               <div class="column__itembox__wrap__item__head__right">
                 <button @click="item.edit =! item.edit">
@@ -113,9 +110,7 @@ export default {
       holder: '',
       showTextarea: true,
       hideEdit: true,
-<<<<<<< HEAD
       draggingItem: {}
-=======
       draggingItem: {},
       palette: [
         {
@@ -140,7 +135,6 @@ export default {
         }
       ],
       selectedColor: ''
->>>>>>> develop
     }
   },
   computed: {
@@ -169,18 +163,12 @@ export default {
         text: this.holder,
         cate: this.idName,
         time: new Date().toLocaleString(),
-<<<<<<< HEAD
-        edit: false
-=======
         edit: false,
         tagColor: this.selectedColor
->>>>>>> develop
       }
       this.$store.dispatch('addItem', itemObj)
       this.holder = ''
     },
-<<<<<<< HEAD
-=======
     pickColor (index) {
       for (let i=0; i<this.palette.length; i++) {
         this.palette[i].selected = false
@@ -188,7 +176,6 @@ export default {
       }
       this.selectedColor = this.palette[index].hex
     },
->>>>>>> develop
     emitItem (item) {
       item.edit = false
       this.$store.dispatch('emitItem', item)
@@ -248,23 +235,7 @@ export default {
         this.$store.dispatch('orderItem')
       }
     }
-<<<<<<< HEAD
-  },
-  // update when list data changed (no need)
-  // watch: {
-    // itemList () {
-    //   this.itemList = this.$store.getters.getList(this.idName)
-    // },
-    // tempList () {
-    //   return this.$store.getters.tempList
-    // },
-    // allList () {
-    //   return this.$store.getters.allList
-    // }
-  // }
-=======
   }
->>>>>>> develop
 }
 
 </script>
@@ -346,20 +317,11 @@ textarea:focus {
           }
           button {
             color: $main-grey;
-<<<<<<< HEAD
-<<<<<<< b53d3b770e7943935727367c82c917082088cb48
             background: transparent;
-=======
-=======
->>>>>>> develop
             transition: all 0.6s ease;
             &:hover {
               color: $purple;
             }
-<<<<<<< HEAD
->>>>>>> edit function done
-=======
->>>>>>> develop
           }
         }
         &__body {

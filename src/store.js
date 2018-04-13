@@ -21,6 +21,8 @@ let loadState = function () {
 let saveNum = function (state) {
   localStorage.allItemNum = Number(state)
 }
+
+
 const store = new Vuex.Store({
   state: {
     itemList: loadState() || [],
@@ -52,9 +54,6 @@ const store = new Vuex.Store({
       state.allItemList ++
       saveState(state.itemList)
       saveNum(state.allItemList)
-    },
-    EMIT_ITEM (state, thisItem) {
-      saveState(state.itemList)
     },
     EMIT_ITEM (state, thisItem) {
       saveState(state.itemList)
