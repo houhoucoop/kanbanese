@@ -1,6 +1,6 @@
 # KANBANese
 
-> KANBANese, this is visualized process management system. [DEMO](https://chenyiya.com/kanbanese/)
+> KANBANese, this is visualized process management system. [DEMO](https://chenyiya.com/side-project/kanbanese/)
 
 ## Intro
 
