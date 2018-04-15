@@ -28,8 +28,7 @@
             @drop="sameColumn(item, $event)"
             draggable="true">
             <div class="column__itembox__wrap__item__head justify-betweeen-center">
-              <div class="column__itembox__wrap__item__head__left">
-                <p class="id-tag">ID {{item.id}}</p>
+              <div class="column__itembox__wrap__item__head__left">                
                 <p class="id-tag" 
                   :style="'background:' + item.tagColor + ';'">
                   ID {{item.id}}
@@ -110,7 +109,6 @@ export default {
       holder: '',
       showTextarea: true,
       hideEdit: true,
-      draggingItem: {}
       draggingItem: {},
       palette: [
         {

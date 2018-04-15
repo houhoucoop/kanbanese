@@ -5,7 +5,8 @@
 ## Intro
 
 - Developed with Vue-cli + Vuex + Pure JS + SCSS.
-- Enable adding and deleting items to each column.
+- Enable adding, editing and deleting items to each column.
+- Enable ID label color selected.
 - Enable reorder items or moving an item between two columns by drag and drop.
 - Enable sorting the items in the order of creating.
 - Enable saving and retrieving data from browser local storage.
