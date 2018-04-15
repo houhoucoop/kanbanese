@@ -4,22 +4,27 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 // broswer local storage
+let saveState = function (state) {
+  // Turn state into JSON string before saving
+  let serializedState = JSON.stringify(state)
+  localStorage.setItem('vue_item', serializedState)
+}
 let loadState = function () {
-  let serializedState = localStorage.getItem('vue_state')
+  let serializedState = localStorage.getItem('vue_item')
   if (serializedState === null) {
     return undefined
   } else {
+    // Turn JSON string into array
     return JSON.parse(serializedState)
   }
 }
-let saveState = function (state) {
-  let serializedState = JSON.stringify(state)
-  localStorage.setItem('vue_state', serializedState)
+let saveNum = function (state) {
+  localStorage.allItemNum = Number(state)
 }
 const store = new Vuex.Store({
   state: {
     itemList: loadState() || [],
-    allItenList: loadState() || []
+    allItemList: localStorage.allItemNum || 1
   },
   actions: {
     addItem ({commit}, thisItem) {
@@ -44,9 +49,12 @@ const store = new Vuex.Store({
   mutations: {
     ADD_ITEM (state, thisItem) {
       state.itemList.push(thisItem)
-      state.allItenList.push(thisItem)
+      state.allItemList ++
       saveState(state.itemList)
-      saveState(state.allItenList)
+      saveNum(state.allItemList)
+    },
+    EMIT_ITEM (state, thisItem) {
+      saveState(state.itemList)
     },
     EMIT_ITEM (state, thisItem) {
       saveState(state.itemList)
@@ -81,7 +89,7 @@ const store = new Vuex.Store({
       };
     },
     allList (state) {
-      return state.allItenList
+      return state.allItemList
     },
     tempList (state) {
       return state.itemList
