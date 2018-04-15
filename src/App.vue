@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-      <!-- {{allList}} -->
     <header class="justify-betweeen-center">
       <h1>KANBANese</h1>
       <button @click="clearStorage">Clear Storage</button>
@@ -23,11 +22,6 @@
 import Column from './components/Column'
 export default {
   name: 'App',
-  // computed: {
-  //   allList () {
-  //     return this.$store.getters.allList
-  //   }
-  // },
   components: {
     Column
   },

@@ -29,7 +29,10 @@
             draggable="true">
             <div class="column__itembox__wrap__item__head justify-betweeen-center">
               <div class="column__itembox__wrap__item__head__left">
-                <p class="id-tag">ID {{item.id}}</p>
+                <p class="id-tag" 
+                  :style="'background:' + item.tagColor + ';'">
+                  ID {{item.id}}
+                </p>
               </div>
               <div class="column__itembox__wrap__item__head__right">
                 <button @click="item.edit =! item.edit">
@@ -68,9 +71,20 @@
           rows="5"
           :id="idName + '-text'"
           v-model="holder"
-          @keyup.enter="addItem"
           autofocus>
         </textarea>
+        <div class="column__additem__input__palette">
+          <p>Tag:</p>
+          <ul>
+            <li 
+              v-for="(color, index) in palette" 
+              :style="'background:' + color.hex + '; border-color:' + color.hex + ';'" 
+              @click = "pickColor(index)"
+              :class = "color.selected ? 'active':''"
+            >  
+            </li>
+          </ul>
+        </div>
         <button
           class="column__additem__input--success"
           :id="idName + '-add'"
@@ -95,7 +109,30 @@ export default {
       holder: '',
       showTextarea: true,
       hideEdit: true,
-      draggingItem: {}
+      draggingItem: {},
+      palette: [
+        {
+          hex: '#ff4f81',
+          selected: false
+        },
+        {
+          hex: '#f9a852',
+          selected: false
+        },
+        {
+          hex: '#ffd100',
+          selected: false
+        },
+        {
+          hex: '#bbd634',
+          selected: false
+        },
+        {
+          hex: '#79b9e7',
+          selected: false
+        }
+      ],
+      selectedColor: ''
     }
   },
   computed: {
@@ -106,7 +143,7 @@ export default {
     tempList () {
       return this.$store.getters.tempList
     },
-    // for counting id numbers
+    // counting id numbers
     allList () {
       return this.$store.getters.allList
     }
@@ -118,16 +155,24 @@ export default {
         return false
       }
       let itemObj = {
-        id: this.allList.length + 1,
-        order: this.allList.length + 1,
+        id: this.allList,
+        order: this.allList,
         class: 'column__itembox__wrap__item',
         text: this.holder,
         cate: this.idName,
         time: new Date().toLocaleString(),
-        edit: false
+        edit: false,
+        tagColor: this.selectedColor
       }
       this.$store.dispatch('addItem', itemObj)
       this.holder = ''
+    },
+    pickColor (index) {
+      for (let i=0; i<this.palette.length; i++) {
+        this.palette[i].selected = false
+        this.palette[index].selected = true
+      }
+      this.selectedColor = this.palette[index].hex
     },
     emitItem (item) {
       item.edit = false
@@ -188,19 +233,7 @@ export default {
         this.$store.dispatch('orderItem')
       }
     }
-  },
-  // update when list data changed (no need)
-  // watch: {
-    // itemList () {
-    //   this.itemList = this.$store.getters.getList(this.idName)
-    // },
-    // tempList () {
-    //   return this.$store.getters.tempList
-    // },
-    // allList () {
-    //   return this.$store.getters.allList
-    // }
-  // }
+  }
 }
 
 </script>
@@ -272,7 +305,7 @@ textarea:focus {
         &__head {
           .id-tag {
             font-size: 11px;
-            background: #DD6DA1;
+            background: #3a3a3a;
             color: #fff;
             width: 45px;
             height: 20px;
@@ -337,7 +370,29 @@ textarea:focus {
         width: 100%;
         box-sizing: border-box;
         border: 1px solid $border-color;
-        margin-bottom: .5em;
+      }
+      &__palette {
+        display: flex;
+        margin: .5em 0;
+        p {
+          margin-right: 10px;
+          color: $main-grey;
+          font-size: 14px;
+        }
+        ul {
+          display: flex;
+          li {
+            width: 15px;
+            height: 15px;
+            border-radius: 99%;
+            border: 2px solid;
+            margin-right: 5px;
+            cursor: pointer;
+          }
+          .active {
+            border-color: $main-grey !important;
+          }
+        }
       }
       &--success {
         padding: .5em 1.5em;
@@ -359,16 +414,10 @@ textarea:focus {
 
 #progress {
   border-top: 5px solid #F2BAA6;
-  .id-tag {
-    background: #F2BAA6;
-  }
 }
 
 #done {
   border-top: 5px solid #7ED8D1;
-  .id-tag {
-    background: #7ED8D1;
-  }
 }
 
 @media (min-width: 768px) {
