@@ -29,9 +29,9 @@
             draggable="true">
             <div class="column__itembox__wrap__item__head justify-betweeen-center">
               <div class="column__itembox__wrap__item__head__left">                
-                <p class="id-tag" 
-                  :style="'background:' + item.tagColor + ';'">
-                  ID {{item.id}}
+                <p class="prior-tag" 
+                  :style="tagColor(item.tagLabel)">
+                  {{item.tagLabel}}
                 </p>
               </div>
               <div class="column__itembox__wrap__item__head__right">
@@ -63,9 +63,17 @@
       <div class="column__additem__title"
         v-if="showTextarea"
         @click="showTextarea=!showTextarea">
-        <p>Add Item <i class="fas fa-plus-circle"></i></p>
+        <p>Add Task <i class="fas fa-plus-circle"></i></p>
       </div>
       <div class="column__additem__input" v-else>
+        <div class="column__additem__input__palette">
+          <p>Priority:</p>
+          <select v-model="priorSelected">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
         <textarea
           cols="30"
           rows="5"
@@ -73,18 +81,6 @@
           v-model="holder"
           autofocus>
         </textarea>
-        <div class="column__additem__input__palette">
-          <p>Tag:</p>
-          <ul>
-            <li 
-              v-for="(color, index) in palette" 
-              :style="'background:' + color.hex + '; border-color:' + color.hex + ';'" 
-              @click = "pickColor(index)"
-              :class = "color.selected ? 'active':''"
-            >  
-            </li>
-          </ul>
-        </div>
         <button
           class="column__additem__input--success"
           :id="idName + '-add'"
@@ -110,29 +106,7 @@ export default {
       showTextarea: true,
       hideEdit: true,
       draggingItem: {},
-      palette: [
-        {
-          hex: '#ff4f81',
-          selected: false
-        },
-        {
-          hex: '#f9a852',
-          selected: false
-        },
-        {
-          hex: '#ffd100',
-          selected: false
-        },
-        {
-          hex: '#bbd634',
-          selected: false
-        },
-        {
-          hex: '#79b9e7',
-          selected: false
-        }
-      ],
-      selectedColor: ''
+      priorSelected: 'High'
     }
   },
   computed: {
@@ -162,17 +136,19 @@ export default {
         cate: this.idName,
         time: new Date().toLocaleString(),
         edit: false,
-        tagColor: this.selectedColor
+        tagLabel: this.priorSelected
       }
       this.$store.dispatch('addItem', itemObj)
       this.holder = ''
     },
-    pickColor (index) {
-      for (let i=0; i<this.palette.length; i++) {
-        this.palette[i].selected = false
-        this.palette[index].selected = true
+    tagColor (prior) {
+      if (prior === "High") {
+        return "background: #DC76A3;"
+      } else if (prior === "Medium") {
+        return "background: #78B1F4;"
+      } else {
+        return "background: #82D8D9;"
       }
-      this.selectedColor = this.palette[index].hex
     },
     emitItem (item) {
       item.edit = false
@@ -251,6 +227,7 @@ $border-color: #e5e5e5;
 }
 
 input:focus,
+select:focus,
 textarea:focus {
   outline: none;
 }
@@ -303,14 +280,12 @@ textarea:focus {
         cursor: move;
         transition: all 0.6s ease;
         &__head {
-          .id-tag {
-            font-size: 11px;
+          .prior-tag {
+            font-size: 12px;
             background: #3a3a3a;
             color: #fff;
-            width: 45px;
-            height: 20px;
-            border-radius: 10px;
-            line-height: 20px;
+            border-radius: 5px;
+            padding: 3px 6px;
             text-align: center;
           }
           button {
@@ -367,33 +342,27 @@ textarea:focus {
       }
     }
     &__input {
-      textarea {
-        width: 100%;
-        box-sizing: border-box;
-        border: 1px solid $border-color;
-      }
       &__palette {
         display: flex;
-        margin: .5em 0;
+        align-items: center;
         p {
           margin-right: 10px;
           color: $main-grey;
           font-size: 14px;
         }
-        ul {
-          display: flex;
-          li {
-            width: 15px;
-            height: 15px;
-            border-radius: 99%;
-            border: 2px solid;
-            margin-right: 5px;
-            cursor: pointer;
-          }
-          .active {
-            border-color: $main-grey !important;
-          }
+        select {
+          border: 1px solid $border-color;
+          background: #fff;
+          width: 80px;
+          height: 28px;
         }
+      }
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid $border-color;
+        margin: .5em 0;
+        padding: 5px;
       }
       &--success {
         padding: .5em 1.5em;
