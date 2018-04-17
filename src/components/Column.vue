@@ -30,9 +30,19 @@
             <div class="column__itembox__wrap__item__head justify-betweeen-center">
               <div class="column__itembox__wrap__item__head__left">                
                 <p class="prior-tag" 
-                  :style="tagColor(item.tagLabel)">
+                  :style="tagColor(item.tagLabel)"
+                  v-if="item.edit == false"
+                >
                   {{item.tagLabel}}
                 </p>
+                <div class="prior-select" v-else>
+                  <p>Priority:</p>
+                  <select v-model="item.tagLabel">
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
               </div>
               <div class="column__itembox__wrap__item__head__right">
                 <button @click="item.edit =! item.edit">
@@ -66,7 +76,7 @@
         <p>Add Task <i class="fas fa-plus-circle"></i></p>
       </div>
       <div class="column__additem__input" v-else>
-        <div class="column__additem__input__palette">
+        <div class="column__additem__input__priority prior-select">
           <p>Priority:</p>
           <select v-model="priorSelected">
             <option value="High">High</option>
@@ -288,6 +298,9 @@ textarea:focus {
             padding: 3px 6px;
             text-align: center;
           }
+          .prior-tag-edit {
+
+          }
           button {
             color: $main-grey;
             background: transparent;
@@ -342,21 +355,6 @@ textarea:focus {
       }
     }
     &__input {
-      &__palette {
-        display: flex;
-        align-items: center;
-        p {
-          margin-right: 10px;
-          color: $main-grey;
-          font-size: 14px;
-        }
-        select {
-          border: 1px solid $border-color;
-          background: #fff;
-          width: 80px;
-          height: 28px;
-        }
-      }
       textarea {
         width: 100%;
         box-sizing: border-box;
@@ -389,6 +387,25 @@ textarea:focus {
 #done {
   border-top: 5px solid #7ED8D1;
 }
+
+
+// common style
+.prior-select {
+  display: flex;
+  align-items: center;
+  p {
+    margin-right: 10px;
+    color: $main-grey;
+    font-size: 14px;
+  }
+  select {
+    border: 1px solid $border-color;
+    background: #fff;
+    width: 80px;
+    height: 28px;
+  }
+}
+
 
 @media (min-width: 768px) {
   .column {
