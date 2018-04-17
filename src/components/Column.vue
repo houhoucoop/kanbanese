@@ -61,7 +61,8 @@
               </div>
             </div>
             <div class="column__itembox__wrap__item__footer">
-              <p>Date: {{item.time}}</p>
+              <p>#{{item.id}} created at {{item.date}}</p>
+              <!-- <p>Date: {{item.time}}</p> -->
             </div>
           </div>
         </transition-group>
@@ -79,9 +80,9 @@
         <div class="column__additem__input__priority prior-select">
           <p>Priority:</p>
           <select v-model="priorSelected">
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
             <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
           </select>
         </div>
         <textarea
@@ -116,7 +117,7 @@ export default {
       showTextarea: true,
       hideEdit: true,
       draggingItem: {},
-      priorSelected: 'High'
+      priorSelected: 'Low'
     }
   },
   computed: {
@@ -144,7 +145,7 @@ export default {
         class: 'column__itembox__wrap__item',
         text: this.holder,
         cate: this.idName,
-        time: new Date().toLocaleString(),
+        date: new Date().toLocaleString(),
         edit: false,
         tagLabel: this.priorSelected
       }
@@ -152,12 +153,12 @@ export default {
       this.holder = ''
     },
     tagColor (prior) {
-      if (prior === "High") {
-        return "background: #DC76A3;"
+      if (prior === "Low") {
+        return "background: #82D8D9;"
       } else if (prior === "Medium") {
         return "background: #78B1F4;"
       } else {
-        return "background: #82D8D9;"
+        return "background: #DC76A3;"
       }
     },
     emitItem (item) {
@@ -260,7 +261,6 @@ textarea:focus {
 
 .column {
   background: #F6F8FC;
-  border-top: 5px solid #DD6DA1;
   padding: 1em;
   max-width: 350px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -378,14 +378,6 @@ textarea:focus {
       }
     }
   }
-}
-
-#progress {
-  border-top: 5px solid #F2BAA6;
-}
-
-#done {
-  border-top: 5px solid #7ED8D1;
 }
 
 

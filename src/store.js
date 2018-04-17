@@ -88,7 +88,7 @@ const store = new Vuex.Store({
       };
     },
     allList (state) {
-      return state.allItemList
+      return (state.allItemList < 100 ? '00' : '') + state.allItemList
     },
     tempList (state) {
       return state.itemList
