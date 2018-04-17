@@ -38,9 +38,9 @@
                 <div class="prior-select" v-else>
                   <p>Priority:</p>
                   <select v-model="item.tagLabel">
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
                     <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
                   </select>
                 </div>
               </div>
