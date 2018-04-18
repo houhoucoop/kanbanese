@@ -151,6 +151,7 @@ button:focus {
       border: 1px solid $border-color;
       padding: 2px 1em;
       border-radius: 16px;
+      background: #F6F8FC;
       svg {
         color: $main-grey;
         margin-right: 5px;
@@ -159,7 +160,7 @@ button:focus {
       input {
         padding: .5em;
         border: none;
-        background: transparent;
+        background: #F6F8FC;
       }
     }
   }
