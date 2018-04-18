@@ -1,18 +1,25 @@
 <template>
   <div id="app">
+    <!-- {{tempList}} -->
     <header class="justify-betweeen-center">
       <h1>KANBANese</h1>
       <button @click="clearStorage">Clear Storage</button>
     </header>
+    <div class="filter">
+      <div class="filter__search">
+        <i class="fas fa-search"></i>
+        <input type="text" v-model="searchString" placeholder="Search Tasks">
+      </div>
+    </div>
     <div class="container">
       <!-- bind id name by props -->
-      <Column id-name="backlog">
+      <Column id-name="backlog" :search-string="searchString">
         <h2 slot="columnTitle">Backlog</h2>
       </Column>
-      <Column id-name="progress">
+      <Column id-name="progress" :search-string="searchString">
         <h2 slot="columnTitle">In Progress</h2>
       </Column>
-      <Column id-name="done">
+      <Column id-name="done" :search-string="searchString">
         <h2 slot="columnTitle">Done</h2>
       </Column>
     </div>
@@ -22,8 +29,18 @@
 import Column from './components/Column'
 export default {
   name: 'App',
+  data () {
+    return {
+      searchString: ''
+    }
+  },
   components: {
     Column
+  },
+  computed: {
+    tempList () {
+      return this.$store.getters.tempList
+    }
   },
   methods: {
     clearStorage () {
@@ -76,10 +93,25 @@ button {
   border: none;
   cursor: pointer;
 }
+input:focus,
 textarea:focus,
 button:focus {
   outline: none;
 }
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: $main-grey;
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: $main-grey;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: $main-grey;
+}
+
 .justify-betweeen-center {
   display: flex;
   justify-content: space-between;
@@ -92,7 +124,8 @@ button:focus {
   max-width: 1200px;
   margin: 3em auto;
   header {
-    margin-bottom: 1.5rem;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid $border-color;
     button {
       width: 120px;
       height: 30px;
@@ -109,7 +142,29 @@ button:focus {
       }
     }
   }
+  .filter {
+    margin: 1.5em auto;
+    display: flex;
+    justify-content: flex-end;
+    &__search {
+      display: table;
+      border: 1px solid $border-color;
+      padding: 2px 1em;
+      border-radius: 16px;
+      svg {
+        color: $main-grey;
+        margin-right: 5px;
+        font-size: .95em;
+      }
+      input {
+        padding: .5em;
+        border: none;
+        background: transparent;
+      }
+    }
+  }
   .container {
+    margin: 1.5em auto;
     display: flex;
   }
 }

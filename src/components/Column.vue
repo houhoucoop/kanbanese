@@ -19,7 +19,7 @@
         <transition-group name="slide-fade" mode="out-in">
           <!-- render each item in itemList with v-for -->
           <div
-            v-for="item in itemList"
+            v-for="item in filterSearch"
             :id="'item-' + item.id"
             :class="item.class"
             :key="item.id"
@@ -110,7 +110,7 @@
 <script>
 export default {
   name: 'Column',
-  props: ['idName'],
+  props: ['idName', 'searchString'],
   data () {
     return {
       holder: '',
@@ -131,6 +131,21 @@ export default {
     // counting id numbers
     allList () {
       return this.$store.getters.allList
+    },
+    // filter item by keyword
+    filterSearch: function() {
+      let itemList = this.itemList
+      let searchKeyword = this.searchString
+      if (!searchKeyword) {
+        return itemList
+      }
+      searchKeyword = searchKeyword.trim().toLowerCase()
+      itemList = itemList.filter(function(item) {
+        if (item.text.toLowerCase().indexOf(searchKeyword) !== -1) {
+          return item
+        }
+      })
+      return itemList
     }
   },
   methods: {

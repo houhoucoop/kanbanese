@@ -80,6 +80,7 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    // get list by id name
     getList (state) {
       return function (keyword) {
         return state.itemList.filter(function (item) {
@@ -87,8 +88,15 @@ const store = new Vuex.Store({
         });
       };
     },
+    // set serial No.#000
     allList (state) {
-      return (state.allItemList < 100 ? '00' : '') + state.allItemList
+      if (state.allItemList < 10) {
+        return '00' + state.allItemList
+      } else if (10 < state.allItemList < 100) {
+        return '0' + state.allItemList
+      } else {
+        return state.allItemList
+      }
     },
     tempList (state) {
       return state.itemList
